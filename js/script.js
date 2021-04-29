@@ -52,7 +52,7 @@
 // Register for Activities - Updating the sum of the cost of the user’s selected activities
     const registeringAct = document.getElementById('activities');
     const actCosts = document.getElementById('activities-cost');
-    let totalCosts = 0;
+    let totalCosts = 0; 
 
     registeringAct.addEventListener('change', (e) => {
         const dataCost = +e.target.getAttribute('data-cost'); //obtaining a reference to the costs of the activity
@@ -96,9 +96,11 @@
     });
 
 // Form Validation 
-    // userName
+    // userName reference
     const emailAddress = document.getElementById('email');
-    // registeringAct
+    // registeringAct reference
+    const actBox = document.getElementById('activities-box');
+    const activities = document.querySelectorAll('input[type="checkbox"]'); //array of all input[type="checkbox"] elements
     const payment = document.getElementById('payment');
     const cardNumber = document.getElementById('cc-num');
     const zipCode = document.getElementById('zip');
@@ -107,18 +109,31 @@
 
     // Helper Validation Functions
         // Name
+        /*** 
+         nameValidator is a function that will test the name input field for proper structure.
+         @returns {[boolean]} regexName - returns a boolean value
+        ***/
         function nameValidator() {
             const regexName = /^[A-Za - z]+.?[A-Za - z]+$/gi.test(userName.value);
             return regexName;
         }
+
         // Email 
+        /*** 
+         emailValidator is a function that will test the email input field for proper structure.
+         @returns {[boolean]} regexEmail - returns a boolean value
+        ***/
         function emailValidator() {
             const regexEmail = /[^@]+@[^@.]+\.[a-z]+$/i.test(emailAddress.value) //regex provided by Treehouse
             return regexEmail;
         }
-        // Activities
+
+        // Activities 
+        /*** 
+         actSignUpValidator is a function that will keep track of the number of activities the user has selected
+         @returns {[number]} actCount - returns the total # of activities selected
+        ***/
         function actSignUpValidator() {
-            const activities = document.querySelectorAll('input[type="checkbox"]'); //array of all input[type="checkbox"] elements
             let actCount = 0;
             
             for (let i = 0; i < activities.length; i++) {
@@ -132,62 +147,122 @@
         }
         // Credit Card
             // CC Number
+                /*** 
+                 CCNumberValidator is a function that will test the cc # input to ensure it is b/w 13-16 numerical digits
+                @returns {[boolean]} regexCCNumber - returns a boolean value
+                ***/
                 function CCNumberValidator() {
                     const regexCCNumber = /^\d{13,16}$/.test(cardNumber.value);
                     return regexCCNumber;
                 }
+
             // Zip Code
+                 /*** 
+                 ZipCodeValidator is a function that will test the zip code # input to ensure it is 5 numerical digits
+                @returns {[boolean]} regexZipCode - returns a boolean value
+                ***/
                 function zipCodeValidator() {
                     const regexZipCode = /^\d{5}$/.test(zipCode.value);
                     return regexZipCode;
                 }
+
             // CCV
+                 /*** 
+                 CCVValidator is a function that will test the ccv # input to ensure it is 3 numerical digits
+                @returns {[boolean]} regexCCV - returns a boolean value
+                ***/
                 function CCVValidator() {
                     const regexCCV = /^\d{3}$/.test(ccv.value);
                     return regexCCV;
                 }
-             
+
+        // Adding Error Hints
+        /*** 
+         showHint is a function that will display error hints on input fields parent's elements that are blank or do not have the 
+         proper structure when the user clicks submit on the form.
+         @param1 {[html element]} errorField - reference to the user input's field.
+        ***/
+        function showHint(errorField) {
+            errorField.parentNode.classList.add('not-valid');
+            errorField.parentNode.classList.remove('valid');
+            errorField.parentNode.lastElementChild.style.display = 'block';
+        }
+
+        // Adding Valid Checks
+        /*** 
+         showHint is a function that will display valid check marks on the correctly filled input fields when the form has been 
+         submitted and there are other errors in the input fields to fix.
+         @param1 {[html element]} validField -  reference to the user input's field.
+        ***/
+        function showValid(validField) {
+            validField.parentNode.classList.add('valid');
+            validField.parentNode.classList.remove('not-valid');
+            validField.parentNode.lastElementChild.style.display = 'none';
+        }
+    
+    // Accessibility - Activites
+    // activities reference
+    for (let i = 0; i < activities.length; i++) {
+        activities[i].addEventListener('focus', () => {
+            activities[i].parentNode.classList.add('focus');
+        });
+
+        activities[i].addEventListener('blur', () => {
+            activities[i].parentNode.classList.remove('focus');
+        });
+    }
+
+    // Accesibility - Error Messages     
     form.addEventListener('submit', (e) => {
         // Name 
         if (!nameValidator()) {
             e.preventDefault();
             userName.value = '';
-            console.log('There is an error with your name');
+            showHint(userName);
+        } else {
+            showValid(userName)
         }
+
         // Email
         if (!emailValidator()) {
             e.preventDefault();
             emailAddress.value = '';
-            console.log('There is an error with your email');
+            showHint(emailAddress);
+        } else {
+            showValid(emailAddress);
         }
         // Activities
         if (actSignUpValidator() === 0){
             e.preventDefault();
-            console.log('You have not signed up for any activity');
+            showHint(actBox);
+        } else {
+            showValid(actBox);
         }
         // Credit Card
-        if (payment.value == 'credit-card') {
+        if (payment.value === 'credit-card' || payment.value === 'select method') {
             // CC Number
             if (!CCNumberValidator()) {
                 e.preventDefault();
                 cardNumber.value = '';
-                console.log('CC Number must be between 13-16 numerical digits');
+                showHint(cardNumber);
+            } else {
+                showValid(cardNumber);
             }
             // Zip Code
             if (!zipCodeValidator()) {
                 e.preventDefault();
                 zipCode.value = '';
-                console.log('Zip Code is a 5 digit number');
+                showHint(zipCode);
+            } else {
+                showValid(zipCode);
             }
             // CCV
             if (!CCVValidator()) {
                 e.preventDefault();
                 ccv.value = '';
-                console.log('CCV is a 3 digit number');
+                showHint(ccv);
+            } else {
+                showValid(ccv);
             }
         }
     });
-    
-
-
-
