@@ -222,7 +222,6 @@
 /*****************
  * ACCESSIBILITY *
 ******************/
-
 // Adding Error Signs
     /*** 
      showNotValid is a function that will display error hints on input fields parent's elements that are blank or do not have the 
@@ -261,43 +260,44 @@
 /*****************
  * LIVE FEEDBACK *
 ******************/  
-// +Conditional Error Message
+// +Conditional Error Message - Name Input
     userName.addEventListener('input', () => {
         const regexuserNameNumber = /\d/.test(userName.value);
 
         if (regexuserNameNumber) {
             userNameHint.textContent = 'The name cannot include a digit value';
             showNotValid(userName);
-        } else if (!nameValidator()) {
+        } else if (!nameValidator() && userName.value === '') {
+            userNameHint.textContent = 'Name field cannot be blank';
             showNotValid(userName);  
         } else {
             showValid(userName);
         }
     });
- 
-// +Conditional Error Message
+// +Conditional Error Message - Email Input
     emailAddress.addEventListener('input', () => {
         const regexEmailAt = /[@]/.test(emailAddress.value);
         const regexEmailDot = /[.]/.test(emailAddress.value);
         
         if (!regexEmailAt || !regexEmailDot) {
-            emailAddressHint.textContent = `Make sure email has '@' and '.' characters`;
+            emailAddressHint.textContent = `Email needs '@' and '.' characters. Ex: yourname@email.com`;
             showNotValid(emailAddress);
-        } else if (!emailValidator()) {
+        } else if (!emailValidator() && emailAddress.value === '') {
+            emailAddressHint.textContent = 'Email address must be formatted correctly';
             showNotValid(emailAddress);  
         } else {
             showValid(emailAddress);
         }
     });
-
+// Card Number
     cardNumber.addEventListener('input', () => {
         CCNumberValidator() ? showValid(cardNumber) : showNotValid(cardNumber);
     });
-
+// Zip Code
     zipCode.addEventListener('input', () => {
         zipCodeValidator() ? showValid(zipCode) : showNotValid(zipCode);
     });
-
+// CCV
     ccv.addEventListener('input', () => {
         CCVValidator() ? showValid(ccv) : showNotValid(ccv);
     });
@@ -315,7 +315,6 @@
         } else {
             showValid(userName)
         }
-
     // Email
         if (!emailValidator()) {
             e.preventDefault();
