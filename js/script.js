@@ -149,7 +149,7 @@
         } 
     });
 /**************
- * VALIDATION *
+ * Validation *
 ***************/
 // Name
     /*** 
@@ -236,7 +236,7 @@
 
 // Adding Valid Checks
     /*** 
-     showHint is a function that will display valid check marks on the correctly filled input fields when the form has been 
+     showValid is a function that will display valid check marks on the correctly filled input fields when the form has been 
      submitted and there are other errors in the input fields to fix.
      @param1 {[html element]} validField -  reference to the user input's field.
     ***/
